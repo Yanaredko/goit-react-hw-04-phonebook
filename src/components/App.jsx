@@ -23,25 +23,33 @@ function App() {
     localStorage.setItem('contacts', JSON.stringify(contacts));
   }, [contacts]);
 
-  const handleAddContact = (newContact) => {
-    const isNameExists = contacts.some(
+ const handleAddContact = (newContact) => {
+  setContacts((prevContacts) => {
+    const isNameExists = prevContacts.some(
       (contact) => contact.name.toLowerCase() === newContact.name.toLowerCase()
     );
 
     if (isNameExists) {
       alert(`${newContact.name} is already in contacts!`);
+      return prevContacts;
     } else {
-      setContacts([...contacts, newContact]);
+      return [...prevContacts, newContact];
     }
-  };
+  });
+};
 
   const handleFilterChange = (event) => {
     setFilter(event.target.value);
   };
 
   const handleDeleteContact = (contactId) => {
-    setContacts(contacts.filter((contact) => contact.id !== contactId));
-  };
+  setContacts((prevContacts) => {
+    const updatedContacts = prevContacts.filter(
+      (contact) => contact.id !== contactId
+    );
+    return updatedContacts;
+  });
+};
 
   const filteredContacts = contacts.filter((contact) =>
     contact.name.toLowerCase().includes(filter.toLowerCase())
